@@ -27,6 +27,7 @@ The project reads a moisture sensor through an MCP3008 ADC, shows plant status w
 
 - `plant_diva_prod_notification.py` - production-style app with Wi-Fi, moisture readings, RGB LED status, and ntfy alerts.
 - `moisture_rgb.py` - local moisture + RGB status loop.
+- `dashboard/server.py` - local phone-friendly dashboard and installable web app.
 - `moisture_code.py` - basic MCP3008 moisture reader.
 - `moisture_warnings.py` - moisture threshold warnings in the serial console.
 - `telnyx_sms_test.py` - test script for sending SMS through Telnyx.
@@ -56,6 +57,24 @@ For one-off testing from a serial REPL:
 exec(open("plant_diva_prod_notification.py").read())
 ```
 
+## Phone Dashboard
+
+Run the local dashboard from this repo:
+
+```bash
+python3 dashboard/server.py
+```
+
+The server prints a Wi-Fi URL like `http://192.168.x.x:8765`. Open that URL on a phone connected to the same Wi-Fi network, then add Plant Diva to the home screen.
+
+To enable the dashboard's test-alert button, pass your ntfy topic at runtime:
+
+```bash
+PLANT_DIVA_NTFY_TOPIC="your-ntfy-topic" python3 dashboard/server.py
+```
+
+The dashboard can show browser notifications while it is open or installed. For reliable push notifications when the phone app is closed, use the ntfy topic configured in `secrets.py`; `plant_diva_prod_notification.py` sends a high-priority alert the first time the moisture reading reaches the dry threshold and resets after the plant returns to the happy range.
+
 ## Notes
 
 The current moisture thresholds in `plant_diva_prod_notification.py` are:
@@ -64,5 +83,10 @@ The current moisture thresholds in `plant_diva_prod_notification.py` are:
 - Getting thirsty: `> 615`
 - Happy: `<= 615`
 
-These may need calibration for the actual sensor, soil, and plant.
+The RGB color mapping is:
 
+- Green: good
+- Blue: getting thirsty
+- Red: very thirsty / needs water
+
+These may need calibration for the actual sensor, soil, and plant.

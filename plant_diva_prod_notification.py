@@ -151,7 +151,7 @@ while True:
             alert_sent = True
 
     elif moisture > HAPPY_THRESHOLD:
-        set_color(1, 0.5, 0)
+        set_color(0, 0, 1)
         print("Getting thirsty")
 
     else:
@@ -164,4 +164,3 @@ while True:
         alert_sent = False
 
     time.sleep(5)
-
